@@ -117,7 +117,7 @@
 
       .hero {
         display: grid;
-        grid-template-columns: 1.5fr 1fr;
+        grid-template-columns: 1fr;
         gap: 22px;
         align-items: stretch;
         margin: 8px 0 26px;
@@ -214,51 +214,10 @@
         color: rgba(255, 255, 255, 0.78);
       }
 
-      .hero-right {
-        border-radius: var(--radius);
-        border: 1px solid var(--stroke);
-        background: rgba(255, 255, 255, 0.03);
-        box-shadow: var(--shadow);
-        padding: 18px;
-      }
-
-      .meta-title {
-        margin: 0 0 10px;
-        font-size: 12px;
-        letter-spacing: 0.6px;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.62);
-      }
-
-      .kv {
-        display: grid;
-        grid-template-columns: 110px 1fr;
-        gap: 10px 12px;
-        margin: 0;
-        font-size: 13px;
-        line-height: 1.35;
-      }
-
-      .kv dt {
-        color: rgba(255, 255, 255, 0.58);
-      }
-
-      .kv dd {
-        margin: 0;
-        color: rgba(255, 255, 255, 0.86);
-      }
-
-      .kv code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-          monospace;
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.78);
-      }
-
       .grid {
         margin-top: 26px;
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 14px;
       }
 
@@ -438,7 +397,7 @@
         </a>
         <div class="nav-right">
           <a class="pill" href="mailto:33146227@student.uwl.ac.uk">Email</a>
-          <a class="pill" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">PDFs</a>
+          <a class="pill" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">Preprints</a>
           <span class="pill" title="Not indexed by search engines">Private link</span>
         </div>
       </header>
@@ -454,30 +413,11 @@
             <a class="btn primary" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">
               Open preprints <span aria-hidden="true">→</span>
             </a>
-            <button class="btn" type="button" id="copyEmailBtn" data-copy="33146227@student.uwl.ac.uk">
-              Copy email <span class="mono">student.uwl.ac.uk</span>
-            </button>
-            <button class="btn" type="button" id="copyHubBtn" data-copy="github.com/WilletJiang">
-              Copy GitHub <span class="mono">WilletJiang</span>
+            <button class="btn" type="button" id="copyPageBtn">
+              Copy page link <span class="mono">share</span>
             </button>
           </div>
         </div>
-
-        <aside class="hero-right" aria-label="Metadata">
-          <p class="meta-title">Details</p>
-          <dl class="kv">
-            <dt>Artifact</dt>
-            <dd>PDF preprints</dd>
-            <dt>Version</dt>
-            <dd>v1 (unlisted)</dd>
-            <dt>Access ID</dt>
-            <dd><code>9f3a7c2d1b4e</code></dd>
-            <dt>Contact</dt>
-            <dd><a href="mailto:33146227@student.uwl.ac.uk">33146227@student.uwl.ac.uk</a></dd>
-            <dt>Indexing</dt>
-            <dd>No (<code>robots.txt</code> + <code>noindex</code>)</dd>
-          </dl>
-        </aside>
       </section>
 
       <div class="preprints-title" aria-label="Preprints heading">
@@ -518,19 +458,6 @@
               <button class="btn js-copy" type="button" data-copy="./p/9f3a7c2d1b4e/rdm.pdf">Copy link</button>
             </div>
           </div>
-
-          <div class="card" role="note" aria-label="Outreach note">
-            <div class="card-top">
-              <span class="tag">Outreach</span>
-              <span class="date">Minimal</span>
-            </div>
-            <h2>How to use</h2>
-            <p>Include one PDF link + a brief note in your email. This page stays private and unindexed.</p>
-            <div class="card-actions">
-              <a class="btn" href="mailto:33146227@student.uwl.ac.uk">Email</a>
-              <button class="btn js-copy" type="button" data-copy="33146227@student.uwl.ac.uk">Copy email</button>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -542,8 +469,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script>
       const toastEl = document.getElementById("toast");
-      const copyEmailBtn = document.getElementById("copyEmailBtn");
-      const copyHubBtn = document.getElementById("copyHubBtn");
+      const copyPageBtn = document.getElementById("copyPageBtn");
       const copyButtons = document.querySelectorAll(".js-copy");
 
       function showToast(text) {
@@ -575,21 +501,10 @@
         await copyText(absolute);
       }
 
-      copyEmailBtn?.addEventListener("click", async () => {
-        const text = copyEmailBtn.getAttribute("data-copy") || "33146227@student.uwl.ac.uk";
+      copyPageBtn?.addEventListener("click", async () => {
         try {
-          await copyText(text);
-          showToast("Email copied.");
-        } catch {
-          showToast("Copy failed.");
-        }
-      });
-
-      copyHubBtn?.addEventListener("click", async () => {
-        const text = copyHubBtn.getAttribute("data-copy") || "github.com/WilletJiang";
-        try {
-          await copyText(text);
-          showToast("GitHub copied.");
+          await copyText(window.location.href);
+          showToast("Page link copied.");
         } catch {
           showToast("Copy failed.");
         }
