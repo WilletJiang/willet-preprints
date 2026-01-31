@@ -110,6 +110,11 @@
         white-space: nowrap;
       }
 
+      .pill:hover {
+        border-color: rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
       .hero {
         display: grid;
         grid-template-columns: 1.5fr 1fr;
@@ -334,6 +339,61 @@
         line-height: 1.45;
       }
 
+      .preprints-title {
+        margin: 26px 0 12px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .preprints-title h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 560;
+        letter-spacing: -0.2px;
+        color: rgba(255, 255, 255, 0.86);
+      }
+
+      .preprints-title p {
+        margin: 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.58);
+      }
+
+      .thumb {
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.02);
+        aspect-ratio: 1200 / 1553;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+      }
+
+      .thumb img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      .card-actions .btn {
+        padding: 9px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+      }
+
+      .card-actions .btn.primary {
+        border-color: rgba(154, 215, 255, 0.22);
+      }
+
       .toast {
         position: fixed;
         left: 50%;
@@ -377,23 +437,28 @@
           <span>Willet Preprint</span>
         </a>
         <div class="nav-right">
-          <a class="pill" href="./p/9f3a7c2d1b4e/preprint_v1.pdf" rel="noopener">PDF</a>
+          <a class="pill" href="mailto:33146227@student.uwl.ac.uk">Email</a>
+          <a class="pill" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">PDFs</a>
           <span class="pill" title="Not indexed by search engines">Private link</span>
         </div>
       </header>
 
       <section class="hero" aria-label="Preprint portal">
         <div class="hero-left">
-          <h1>Preprint access for academic outreach.</h1>
+          <h1>Private preprints for academic outreach.</h1>
           <p class="sub">
-            This page is intentionally minimal. Share the PDF link directly with collaborators or potential advisors.
+            Share a direct link with collaborators or potential advisors. This page is unlisted and not intended for search
+            indexing.
           </p>
           <div class="actions">
-            <a class="btn primary" href="./p/9f3a7c2d1b4e/preprint_v1.pdf" rel="noopener">
-              Open PDF <span aria-hidden="true">→</span>
+            <a class="btn primary" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">
+              Open preprints <span aria-hidden="true">→</span>
             </a>
-            <button class="btn" type="button" id="copyBtn" data-copy="./p/9f3a7c2d1b4e/preprint_v1.pdf">
-              Copy link <span class="mono" id="copyHint">p/9f3a7c2d1b4e/…</span>
+            <button class="btn" type="button" id="copyEmailBtn" data-copy="33146227@student.uwl.ac.uk">
+              Copy email <span class="mono">student.uwl.ac.uk</span>
+            </button>
+            <button class="btn" type="button" id="copyHubBtn" data-copy="github.com/WilletJiang">
+              Copy GitHub <span class="mono">WilletJiang</span>
             </button>
           </div>
         </div>
@@ -402,42 +467,69 @@
           <p class="meta-title">Details</p>
           <dl class="kv">
             <dt>Artifact</dt>
-            <dd>PDF preprint</dd>
+            <dd>PDF preprints</dd>
             <dt>Version</dt>
-            <dd>v1</dd>
+            <dd>v1 (unlisted)</dd>
             <dt>Access ID</dt>
             <dd><code>9f3a7c2d1b4e</code></dd>
+            <dt>Contact</dt>
+            <dd><a href="mailto:33146227@student.uwl.ac.uk">33146227@student.uwl.ac.uk</a></dd>
             <dt>Indexing</dt>
             <dd>No (<code>robots.txt</code> + <code>noindex</code>)</dd>
           </dl>
         </aside>
       </section>
 
-      <section aria-label="Latest">
+      <div class="preprints-title" aria-label="Preprints heading">
+        <h2>Latest preprints</h2>
+        <p>Direct links. Please do not redistribute.</p>
+      </div>
+
+      <section aria-label="Preprints">
         <div class="grid">
-          <a class="card" href="./p/9f3a7c2d1b4e/preprint_v1.pdf" rel="noopener">
+          <div class="card" role="article" aria-label="The Geometry of Uncertainty preprint">
             <div class="card-top">
-              <span class="tag">Research</span>
-              <span class="date">Version 1</span>
+              <span class="tag">Preprint</span>
+              <span class="date">Jan 31, 2026</span>
             </div>
-            <h2>Preprint v1 (PDF)</h2>
-            <p>Short technical manuscript. Link is unlisted; please do not redistribute without permission.</p>
-          </a>
-          <a class="card" href="./p/9f3a7c2d1b4e/preprint_v1.pdf" rel="noopener">
+            <div class="thumb" aria-hidden="true">
+              <img src="./assets/gbs-cover.png" alt="" />
+            </div>
+            <h2>The Geometry of Uncertainty</h2>
+            <p>Geodesic Bayesian smoothing via metric–drift disentanglement.</p>
+            <div class="card-actions">
+              <a class="btn primary" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">Open PDF</a>
+              <button class="btn js-copy" type="button" data-copy="./p/9f3a7c2d1b4e/gbs.pdf">Copy link</button>
+            </div>
+          </div>
+
+          <div class="card" role="article" aria-label="Riemannian Diffusion Matérn Kernels preprint">
             <div class="card-top">
-              <span class="tag">Download</span>
-              <span class="date">Direct</span>
+              <span class="tag">Preprint</span>
+              <span class="date">2026</span>
             </div>
-            <h2>Direct PDF link</h2>
-            <p>Works in browser (inline) and as a file download depending on platform settings.</p>
-          </a>
-          <div class="card" role="note" aria-label="Contact">
+            <div class="thumb" aria-hidden="true">
+              <img src="./assets/rdm-cover.png" alt="" />
+            </div>
+            <h2>Riemannian Diffusion Matérn Kernels</h2>
+            <p>Learned geometry from a unimodular metric field.</p>
+            <div class="card-actions">
+              <a class="btn primary" href="./p/9f3a7c2d1b4e/rdm.pdf" rel="noopener">Open PDF</a>
+              <button class="btn js-copy" type="button" data-copy="./p/9f3a7c2d1b4e/rdm.pdf">Copy link</button>
+            </div>
+          </div>
+
+          <div class="card" role="note" aria-label="Outreach note">
             <div class="card-top">
-              <span class="tag">Contact</span>
-              <span class="date">Optional</span>
+              <span class="tag">Outreach</span>
+              <span class="date">Minimal</span>
             </div>
-            <h2>Add your email</h2>
-            <p>Edit <code>index.html</code> to add your preferred contact line for outreach.</p>
+            <h2>How to use</h2>
+            <p>Include one PDF link + a brief note in your email. This page stays private and unindexed.</p>
+            <div class="card-actions">
+              <a class="btn" href="mailto:33146227@student.uwl.ac.uk">Email</a>
+              <button class="btn js-copy" type="button" data-copy="33146227@student.uwl.ac.uk">Copy email</button>
+            </div>
           </div>
         </div>
       </section>
@@ -450,7 +542,9 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script>
       const toastEl = document.getElementById("toast");
-      const copyBtn = document.getElementById("copyBtn");
+      const copyEmailBtn = document.getElementById("copyEmailBtn");
+      const copyHubBtn = document.getElementById("copyHubBtn");
+      const copyButtons = document.querySelectorAll(".js-copy");
 
       function showToast(text) {
         toastEl.textContent = text;
@@ -476,15 +570,42 @@
         if (!ok) throw new Error("Copy failed");
       }
 
-      copyBtn?.addEventListener("click", async () => {
-        const href = copyBtn.getAttribute("data-copy") || "./p/9f3a7c2d1b4e/preprint_v1.pdf";
+      async function copyAbsoluteHref(href) {
         const absolute = new URL(href, window.location.href).toString();
+        await copyText(absolute);
+      }
+
+      copyEmailBtn?.addEventListener("click", async () => {
+        const text = copyEmailBtn.getAttribute("data-copy") || "33146227@student.uwl.ac.uk";
         try {
-          await copyText(absolute);
-          showToast("Link copied.");
+          await copyText(text);
+          showToast("Email copied.");
         } catch {
-          showToast("Copy failed. Please copy from the address bar.");
+          showToast("Copy failed.");
         }
+      });
+
+      copyHubBtn?.addEventListener("click", async () => {
+        const text = copyHubBtn.getAttribute("data-copy") || "github.com/WilletJiang";
+        try {
+          await copyText(text);
+          showToast("GitHub copied.");
+        } catch {
+          showToast("Copy failed.");
+        }
+      });
+
+      copyButtons.forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const href = btn.getAttribute("data-copy");
+          if (!href) return;
+          try {
+            await copyAbsoluteHref(href);
+            showToast("Link copied.");
+          } catch {
+            showToast("Copy failed.");
+          }
+        });
       });
     </script>
   </body>
