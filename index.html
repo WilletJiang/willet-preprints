@@ -8,482 +8,532 @@
   <meta name="robots" content="noindex, nofollow, noarchive" />
   <title>Willet Preprint</title>
   <meta name="description" content="A minimal preprint entry point for academic outreach." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #05060a;
-      --panel: rgba(255, 255, 255, 0.06);
-      --panel-2: rgba(255, 255, 255, 0.08);
-      --stroke: rgba(255, 255, 255, 0.12);
-      --text: rgba(255, 255, 255, 0.92);
-      --muted: rgba(255, 255, 255, 0.65);
-      --faint: rgba(255, 255, 255, 0.45);
-      --accent: #b6f3d1;
-      --accent-2: #9ad7ff;
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
-      --radius: 18px;
+      --bg: #08080a;
+      --surface: rgba(255, 252, 245, 0.03);
+      --surface-2: rgba(255, 252, 245, 0.055);
+      --border: rgba(255, 252, 245, 0.08);
+      --border-active: rgba(212, 170, 120, 0.3);
+      --text: rgba(255, 252, 245, 0.9);
+      --text-2: rgba(255, 252, 245, 0.55);
+      --text-3: rgba(255, 252, 245, 0.3);
+      --gold: #c9a87a;
+      --gold-dim: rgba(201, 168, 122, 0.08);
+      --serif: "Cormorant", Georgia, serif;
+      --mono: "DM Mono", ui-monospace, SFMono-Regular, monospace;
     }
 
-    * {
-      box-sizing: border-box;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+    ::selection { background: rgba(201, 168, 122, 0.25); }
+
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201, 168, 122, 0.15) transparent;
     }
 
-    html,
     body {
-      height: 100%;
-    }
-
-    body {
-      margin: 0;
+      background: var(--bg);
       color: var(--text);
-      background: radial-gradient(1200px 800px at 20% 0%, rgba(154, 215, 255, 0.08), transparent 55%),
-        radial-gradient(1200px 800px at 80% 20%, rgba(182, 243, 209, 0.07), transparent 60%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 45%),
-        var(--bg);
-      font-family: ui-serif, "Iowan Old Style", "Charter", Georgia, "Times New Roman", Times, serif;
+      font-family: var(--serif);
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    a {
-      color: inherit;
+    a { color: inherit; }
+
+    /* ---- Noise texture ---- */
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      opacity: 0.4; mix-blend-mode: overlay;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
     }
 
-    .wrap {
-      max-width: 1120px;
-      padding: 32px 20px 56px;
+    /* ---- Ambient glow ---- */
+    .glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 20% 0%, rgba(201, 168, 122, 0.06), transparent),
+        radial-gradient(ellipse 40% 50% at 90% 30%, rgba(160, 130, 90, 0.04), transparent);
+    }
+
+    /* ---- Layout ---- */
+    .page {
+      position: relative; z-index: 1;
+      max-width: 1200px;
       margin: 0 auto;
+      padding: 0 48px;
     }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 10px 0 26px;
+    @media (max-width: 700px) { .page { padding: 0 22px; } }
+
+    /* ---- Top bar ---- */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      animation: enter 800ms ease both;
     }
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-
-    .mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(182, 243, 209, 0.22), rgba(154, 215, 255, 0.22));
-      border: 1px solid var(--stroke);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      position: relative;
-    }
-
-    .mark::after {
-      content: "";
-      position: absolute;
-      inset: 7px;
-      border-radius: 7px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-    }
-
-    .brand span {
-      font-size: 15px;
-      letter-spacing: 0.2px;
-      color: rgba(255, 255, 255, 0.86);
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .pill {
+    .logo {
+      font-family: var(--mono);
       font-size: 12px;
-      letter-spacing: 0.2px;
-      color: var(--muted);
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--stroke);
-      background: rgba(255, 255, 255, 0.03);
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-2);
       text-decoration: none;
-      white-space: nowrap;
     }
 
-    .pill:hover {
-      border-color: rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.05);
+    .topbar nav { display: flex; gap: 24px; }
+
+    .topbar nav a {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 200ms;
     }
 
+    .topbar nav a:hover { color: var(--gold); }
+
+    .status {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+
+    /* ---- Hero ---- */
     .hero {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 22px;
-      align-items: stretch;
-      margin: 8px 0 26px;
+      padding: 100px 0 80px;
+      border-bottom: 1px solid var(--border);
+      animation: enter 800ms ease both 100ms;
     }
 
-    @media (max-width: 860px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
+    .hero-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 28px;
     }
 
-    .hero-left {
-      border-radius: var(--radius);
-      border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
-      box-shadow: var(--shadow);
-      padding: 22px 22px 18px;
-      overflow: hidden;
-      position: relative;
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(48px, 8vw, 110px);
+      line-height: 0.95;
+      letter-spacing: -2px;
+      color: var(--text);
     }
 
-    .hero-left::before {
-      content: "";
-      position: absolute;
-      inset: -40px -80px auto auto;
-      width: 260px;
-      height: 260px;
-      background: radial-gradient(circle at 30% 30%, rgba(182, 243, 209, 0.14), transparent 60%),
-        radial-gradient(circle at 70% 70%, rgba(154, 215, 255, 0.12), transparent 60%);
-      filter: blur(1px);
-      pointer-events: none;
+    .hero h1 em {
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
     }
 
-    h1 {
-      margin: 0;
-      font-weight: 560;
-      font-size: clamp(28px, 4vw, 44px);
-      letter-spacing: -0.3px;
-      line-height: 1.06;
-    }
-
-    .sub {
-      margin: 12px 0 0;
-      max-width: 62ch;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
-    }
-
-    .actions {
+    .hero-bottom {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .hero-desc {
+      max-width: 38ch;
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--text-2);
+    }
+
+    .hero-actions {
+      display: flex; gap: 12px; flex-shrink: 0;
     }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 11px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--stroke);
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.9);
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--text-2);
       text-decoration: none;
-      font-size: 13px;
-      letter-spacing: 0.2px;
+      padding: 12px 20px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
       cursor: pointer;
-      user-select: none;
-      transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+      transition: border-color 200ms, color 200ms, background 200ms;
     }
 
     .btn:hover {
-      transform: translateY(-1px);
-      background: rgba(255, 255, 255, 0.07);
-      border-color: rgba(255, 255, 255, 0.18);
+      border-color: var(--border-active);
+      color: var(--gold);
+      background: var(--gold-dim);
     }
 
-    .btn:active {
-      transform: translateY(0px);
+    .btn-arrow {
+      transition: transform 250ms ease;
+      font-style: normal;
     }
 
-    .btn.primary {
-      background: linear-gradient(135deg, rgba(182, 243, 209, 0.14), rgba(154, 215, 255, 0.12));
-      border-color: rgba(182, 243, 209, 0.22);
+    .btn:hover .btn-arrow { transform: translateX(3px); }
+
+    /* ---- Exhibit section ---- */
+    .exhibits {
+      padding: 64px 0 0;
     }
 
-    .btn .mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-        monospace;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.78);
+    .exhibits-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 48px;
+      animation: enter 800ms ease both 200ms;
     }
 
-    .grid {
-      margin-top: 26px;
+    .exhibits-head h2 {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .exhibits-head span {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-3);
+      letter-spacing: 0.5px;
+    }
+
+    /* ---- Single exhibit row ---- */
+    .exhibit {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 14px;
+      grid-template-columns: 72px 150px 1fr;
+      gap: 0 40px;
+      align-items: start;
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      position: relative;
+      transition: background 300ms;
     }
 
-    @media (max-width: 980px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .exhibit:last-child {
+      border-bottom: 1px solid var(--border);
     }
 
-    @media (max-width: 620px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    .exhibit:hover {
+      background: linear-gradient(90deg, var(--gold-dim), transparent 70%);
     }
 
-    .card {
-      border-radius: var(--radius);
-      border: 1px solid var(--stroke);
-      background: rgba(255, 255, 255, 0.03);
-      padding: 16px 16px 14px;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 164px;
-      transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+    .exhibit:nth-child(1) { animation: enter 800ms ease both 300ms; }
+    .exhibit:nth-child(2) { animation: enter 800ms ease both 420ms; }
+    .exhibit:nth-child(3) { animation: enter 800ms ease both 540ms; }
+
+    .exhibit-num {
+      font-family: var(--serif);
+      font-size: 64px;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--text-3);
+      transition: color 400ms;
+      padding-top: 8px;
     }
 
-    .card:hover {
-      transform: translateY(-1px);
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.18);
+    .exhibit:hover .exhibit-num {
+      color: var(--gold);
     }
 
-    .card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .tag {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.72);
-      border: 1px solid var(--stroke);
-      background: rgba(255, 255, 255, 0.03);
-      padding: 6px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-
-    .date {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.55);
-    }
-
-    .card h2 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 560;
-      letter-spacing: -0.2px;
-      line-height: 1.2;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    footer {
-      margin-top: 28px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.55);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .preprints-title {
-      margin: 26px 0 12px;
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .preprints-title h2 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 560;
-      letter-spacing: -0.2px;
-      color: rgba(255, 255, 255, 0.86);
-    }
-
-    .preprints-title p {
-      margin: 0;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.58);
-    }
-
-    .thumb {
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
+    .exhibit-cover {
+      position: relative;
+      border-radius: 6px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.02);
-      aspect-ratio: 1200 / 1553;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
-    }
-
-    .thumb img {
-      display: block;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-height: 200px;
+      background: var(--surface);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 400ms ease;
     }
 
-    .card-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 6px;
+    .exhibit:hover .exhibit-cover {
+      transform: translateY(-4px) scale(1.015);
+      box-shadow: 0 20px 56px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(201, 168, 122, 0.12);
     }
 
-    .card-actions .btn {
-      padding: 9px 10px;
-      border-radius: 10px;
-      font-size: 12px;
+    .exhibit-cover img {
+      display: block; width: 100%; height: 100%; object-fit: cover;
     }
 
-    .card-actions .btn.primary {
-      border-color: rgba(154, 215, 255, 0.22);
+    .exhibit-body {
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+      padding: 4px 0;
     }
 
+    .exhibit-meta {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .exhibit-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201, 168, 122, 0.2);
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
+
+    .exhibit-date {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-3);
+    }
+
+    .exhibit-title {
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.12;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+
+    .exhibit-desc {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--text-2);
+      max-width: 50ch;
+    }
+
+    .exhibit-actions {
+      display: flex; gap: 10px; margin-top: 24px;
+    }
+
+    .exhibit-actions .btn {
+      padding: 10px 16px;
+      font-size: 10px;
+    }
+
+    /* ---- Footer ---- */
+    .foot {
+      padding: 40px 0 64px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+      color: var(--text-3);
+      line-height: 1.6;
+      animation: enter 800ms ease both 640ms;
+    }
+
+    /* ---- Toast ---- */
     .toast {
       position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--stroke);
-      background: rgba(8, 10, 16, 0.8);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 140ms ease;
+      left: 50%; bottom: 28px;
+      transform: translateX(-50%) translateY(6px);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      color: var(--gold);
+      padding: 10px 18px;
+      border: 1px solid rgba(201, 168, 122, 0.2);
+      border-radius: 4px;
+      background: rgba(8, 8, 10, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 180ms, transform 180ms;
+      z-index: 100;
     }
 
     .toast.show {
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ---- Animations ---- */
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     @media (prefers-reduced-motion: reduce) {
+      .topbar, .hero, .exhibits-head, .exhibit, .foot { animation: none; }
+      .btn, .exhibit-cover, .exhibit-num, .toast, .topbar nav a { transition: none; }
+      .exhibit:hover .exhibit-cover { transform: none; }
+      .toast.show { transform: translateX(-50%); }
+    }
 
-      .btn,
-      .card,
-      .toast {
-        transition: none;
+    /* ---- Responsive ---- */
+    @media (max-width: 860px) {
+      .exhibit {
+        grid-template-columns: 48px 120px 1fr;
+        gap: 0 24px;
+      }
+      .exhibit-num { font-size: 44px; }
+      .exhibit-title { font-size: 24px; }
+      .hero { padding: 64px 0 56px; }
+      .hero h1 { letter-spacing: -1px; }
+    }
+
+    @media (max-width: 620px) {
+      .hero-bottom { flex-direction: column; align-items: flex-start; gap: 24px; }
+
+      .exhibit {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 32px 0;
       }
 
-      .btn:hover,
-      .card:hover {
-        transform: none;
+      .exhibit-num {
+        font-size: 36px;
+        padding: 0;
       }
+
+      .exhibit-cover {
+        max-width: 200px;
+      }
+
+      .topbar nav { gap: 16px; }
+      .status { display: none; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <a class="brand" href="./" aria-label="Home">
-        <div class="mark" aria-hidden="true"></div>
-        <span>Willet Preprint</span>
-      </a>
-      <div class="nav-right">
-        <a class="pill" href="mailto:33146227@student.uwl.ac.uk">Email</a>
-        <a class="pill" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">Preprints</a>
-        <span class="pill" title="Not indexed by search engines">Private link</span>
-      </div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="glow" aria-hidden="true"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <a class="logo" href="./" aria-label="Home">Willet</a>
+      <nav>
+        <a href="mailto:33146227@student.uwl.ac.uk">Email</a>
+        <a href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">Papers</a>
+        <span class="status">Private</span>
+      </nav>
     </header>
 
     <section class="hero" aria-label="Preprint portal">
-      <div class="hero-left">
-        <h1>Private preprints for academic outreach.</h1>
-        <p class="sub">
-          Share a direct link with collaborators or potential advisors. This page is unlisted and not intended for
-          search
-          indexing.
+      <div class="hero-label">Academic Outreach &mdash; 2026</div>
+      <h1>Private<br />Preprints<br />for <em>Research</em></h1>
+      <div class="hero-bottom">
+        <p class="hero-desc">
+          A direct link for collaborators and potential advisors.
+          Unlisted, not indexed.
         </p>
-        <div class="actions">
-          <a class="btn primary" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">
-            Open preprints <span aria-hidden="true">→</span>
+        <div class="hero-actions">
+          <a class="btn" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">
+            Open latest <i class="btn-arrow" aria-hidden="true">&#8594;</i>
           </a>
-          <button class="btn" type="button" id="copyPageBtn">
-            Copy page link <span class="mono">share</span>
-          </button>
+          <button class="btn" type="button" id="copyPageBtn">Share link</button>
         </div>
       </div>
     </section>
 
-    <div class="preprints-title" aria-label="Preprints heading">
-      <h2>Latest preprints</h2>
-      <p>Direct links. Please do not redistribute.</p>
-    </div>
+    <section class="exhibits" aria-label="Preprints">
+      <div class="exhibits-head">
+        <h2>Latest Preprints</h2>
+        <span>Do not redistribute</span>
+      </div>
 
-    <section aria-label="Preprints">
-      <div class="grid">
-        <div class="card" role="article" aria-label="The Geometry of Uncertainty preprint">
-          <div class="card-top">
-            <span class="tag">Preprint</span>
-            <span class="date">Jan 31, 2026</span>
+      <div class="exhibit" role="article" aria-label="The Geometry of Uncertainty">
+        <div class="exhibit-num" aria-hidden="true">01</div>
+        <div class="exhibit-cover">
+          <img src="./assets/gbs-cover.png" alt="" loading="lazy" />
+        </div>
+        <div class="exhibit-body">
+          <div>
+            <div class="exhibit-meta">
+              <span class="exhibit-tag">Preprint</span>
+              <span class="exhibit-date">Jan 31, 2026</span>
+            </div>
+            <h3 class="exhibit-title">The Geometry of Uncertainty</h3>
+            <p class="exhibit-desc">Geodesic Bayesian smoothing via metric&#8211;drift disentanglement.</p>
           </div>
-          <div class="thumb" aria-hidden="true">
-            <img src="./assets/gbs-cover.png" alt="" />
-          </div>
-          <h2>The Geometry of Uncertainty</h2>
-          <p>Geodesic Bayesian smoothing via metric–drift disentanglement.</p>
-          <div class="card-actions">
-            <a class="btn primary" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">Open PDF</a>
+          <div class="exhibit-actions">
+            <a class="btn" href="./p/9f3a7c2d1b4e/gbs.pdf" rel="noopener">
+              Open PDF <i class="btn-arrow" aria-hidden="true">&#8594;</i>
+            </a>
             <button class="btn js-copy" type="button" data-copy="./p/9f3a7c2d1b4e/gbs.pdf">Copy link</button>
           </div>
         </div>
+      </div>
 
-        <div class="card" role="article" aria-label="Riemannian Diffusion Matérn Kernels preprint">
-          <div class="card-top">
-            <span class="tag">Preprint</span>
-            <span class="date">2026</span>
+      <div class="exhibit" role="article" aria-label="Riemannian Diffusion Matérn Kernels">
+        <div class="exhibit-num" aria-hidden="true">02</div>
+        <div class="exhibit-cover">
+          <img src="./assets/rdm-cover.png" alt="" loading="lazy" />
+        </div>
+        <div class="exhibit-body">
+          <div>
+            <div class="exhibit-meta">
+              <span class="exhibit-tag">Preprint</span>
+              <span class="exhibit-date">2026</span>
+            </div>
+            <h3 class="exhibit-title">Riemannian Diffusion Mat&#233;rn Kernels</h3>
+            <p class="exhibit-desc">Learned geometry from a unimodular metric field.</p>
           </div>
-          <div class="thumb" aria-hidden="true">
-            <img src="./assets/rdm-cover.png" alt="" />
-          </div>
-          <h2>Riemannian Diffusion Matérn Kernels</h2>
-          <p>Learned geometry from a unimodular metric field.</p>
-          <div class="card-actions">
-            <a class="btn primary" href="./p/9f3a7c2d1b4e/rdm.pdf" rel="noopener">Open PDF</a>
+          <div class="exhibit-actions">
+            <a class="btn" href="./p/9f3a7c2d1b4e/rdm.pdf" rel="noopener">
+              Open PDF <i class="btn-arrow" aria-hidden="true">&#8594;</i>
+            </a>
             <button class="btn js-copy" type="button" data-copy="./p/9f3a7c2d1b4e/rdm.pdf">Copy link</button>
           </div>
         </div>
+      </div>
 
-        <div class="card" role="article" aria-label="Neural-Lifted Sum-of-Exponentials preprint">
-          <div class="card-top">
-            <span class="tag">Preprint</span>
-            <span class="date">2026</span>
+      <div class="exhibit" role="article" aria-label="Neural-Lifted Sum-of-Exponentials">
+        <div class="exhibit-num" aria-hidden="true">03</div>
+        <div class="exhibit-cover">
+          <img src="./assets/nl-soe-cover.png" alt="" loading="lazy" />
+        </div>
+        <div class="exhibit-body">
+          <div>
+            <div class="exhibit-meta">
+              <span class="exhibit-tag">Preprint</span>
+              <span class="exhibit-date">2026</span>
+            </div>
+            <h3 class="exhibit-title">Neural-Lifted Sum-of-Exponentials</h3>
+            <p class="exhibit-desc">Learn-to-Discretize Fractional Riccati Equations for Rough Volatility.</p>
           </div>
-          <div class="thumb" aria-hidden="true">
-            <img src="./assets/nl-soe-cover.png" alt="" />
-          </div>
-          <h2>Neural-Lifted Sum-of-Exponentials</h2>
-          <p>Learn-to-Discretize Fractional Riccati Equations for Rough Volatility.</p>
-          <div class="card-actions">
-            <a class="btn primary" href="./p/9f3a7c2d1b4e/nl-soe.pdf" rel="noopener">Open PDF</a>
+          <div class="exhibit-actions">
+            <a class="btn" href="./p/9f3a7c2d1b4e/nl-soe.pdf" rel="noopener">
+              Open PDF <i class="btn-arrow" aria-hidden="true">&#8594;</i>
+            </a>
             <button class="btn js-copy" type="button" data-copy="./p/9f3a7c2d1b4e/nl-soe.pdf">Copy link</button>
           </div>
         </div>
       </div>
     </section>
 
-    <footer>
-      <div>Academic outreach only. If you received this link by mistake, please ignore it.</div>
+    <footer class="foot">
+      Academic outreach only. If you received this link by mistake, please disregard.
     </footer>
   </div>
 
